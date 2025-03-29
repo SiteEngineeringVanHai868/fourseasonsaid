@@ -1,0 +1,79 @@
+<div class="add-second-button" style="display: none;">
+         <style>
+             .add-second-button .product-variants {
+                margin-top:15px;
+             }
+            .add-second-button .form-gr input, .add-second-button .js-qty, .ajaxcart__qty {
+                max-width:100px;
+                min-width: 75px;
+                display: inline-block;
+                margin-right: 7px;
+                height: 45px;
+            }
+            .add-second-button .form-gr {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .add-second-button .form-gr button, .add-second-button .form-gr select {
+                display:inline-block;
+                height: 45px;
+              
+           }
+           .add-second-button .form-gr button {
+            margin-top:-4px;
+           }
+       
+            .add-second-button .form-gr label {
+                width: 100%;
+                margin-bottom: 5px;
+                display: block;
+            }
+            .add-second-button .form-gr img {
+                max-width: 100%;
+                margin-top:5px;
+            }
+    .add-second-button .form-gr .form-gr-half {
+        display: inline-block;
+    }
+    </style><form action="/cart/add" method="post" id="addToCartForm"><input type="hidden" name="return_to" value="/checkout" />
+            <div class="form-gr">
+                {% if product.variants.size == 1 %}
+                <input name="id" value="{{ product.variants.first.id }}" type="hidden" />
+                {% else %}
+                <select  name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-{{ section.id }} form-ctl" >
+                 {% for variant in product.variants %}
+                 {% if variant.available %}
+                 <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+                 {% else %}
+                 <option disabled="disabled">
+                 {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                 </option>
+                 {% endif %}
+                 {% endfor %}
+                 </select>
+                 {% endif %}
+            </div>
+            <div class="form-gr">
+                <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}" >{{ 'products.product.quantity' | t }}</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector" >
+                <button type="submit" name="add" id="addToCart" class="btn add-cart-secondary" >
+                    <span id="AddToCartText-{{ section.id }}">Add to cart</span>
+                 </button>
+                 <p><img src="https://second-button.app.prod.fuznet.com/upload/trinhcongkhoa.myshopify.com/1557636099_Add-To-Cart.jpg"></p>
+         </div>
+         </form>
+        <script>
+  var productSelect = document.getElementById("productSelect-product-template");
+    if (typeof productSelect !== "undefined" && productSelect)  {
+            if (typeof productSelect.options !== "undefined" && productSelect.options) {
+                var option = productSelect.options;
+                if (option.length > 1) {
+                  for (i = 0; i < option.length; i++) {
+                      var text = option[i].text;
+                      text = text.replace("Default Title", "Prix");
+                      option[i].text = text;
+                  }
+                }
+            }
+        }
+</script></div>
